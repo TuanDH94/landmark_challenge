@@ -11,7 +11,7 @@ import os
 
 
 # parameter init
-batch_size = 32
+batch_size = 256
 num_classes = 103
 epochs = 100
 data_augmentation = True
@@ -19,8 +19,8 @@ num_predictions = 20
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 model_name = 'keras_landmark_trained_model.h5'
 file_path = 'E:\\Data\\train_val2018\\TrainVal\\'
-img_height = 28
-img_width = 28
+img_height = 56
+img_width = 56
 # generate data
 datagen = processing.ImageDataGenerator(
     rescale=1. / 255,
