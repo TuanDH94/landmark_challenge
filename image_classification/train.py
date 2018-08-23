@@ -13,7 +13,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 import os
-import src.image_processing as img_processing
+import image_classification.image_processing as img_processing
 batch_size = 32
 num_classes = 10
 epochs = 100

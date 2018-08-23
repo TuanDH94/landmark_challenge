@@ -1,8 +1,8 @@
 import keras
 from keras.applications.inception_v3 import InceptionV3
 from keras.preprocessing import image
-from keras.models import Model
-from keras.layers import Dense, GlobalAveragePooling2D
+from keras.models import Model, Sequential
+from keras.layers import Dense, GlobalAveragePooling2D, Dropout, Conv2D, Activation, MaxPooling2D, Flatten
 from keras import backend as K
 import keras_preprocessing.image as processing
 import numpy as np
@@ -22,20 +22,36 @@ file_path = 'E:\\Data\\train_val2018\\TrainVal\\'
 img_height = 112
 img_width = 112
 
+model = Sequential()
 
 # create the base pre-trained model
 base_model = InceptionV3(weights='imagenet', include_top=False)
 
-# add a global spatial average pooling layer
-x = base_model.output
-x = GlobalAveragePooling2D()(x)
-# let's add a fully-connected layer
-x = Dense(1024, activation='relu')(x)
-# and a logistic layer -- let's say we have 200 classes
-predictions = Dense(num_classes, activation='softmax')(x)
+for layer in base_model.layers:
+    model.add(layer)
+model.add(GlobalAveragePooling2D())
+model.add(Conv2D(32, (3, 3)))
+model.add(Activation('relu'))
+model.add(Conv2D(32, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
 
-# this is the model we will train
-model = Model(inputs=base_model.input, outputs=predictions)
+model.add(Conv2D(64, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(64, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Flatten())
+model.add(Dense(512))
+model.add(Activation('relu'))
+model.add(Dropout(0.5))
+# let's add a fully-connected layer
+model.add(Dense(1024, activation='relu'))
+# and a logistic layer -- let's say we have 200 classes
+model.add(Dense(num_classes, activation='softmax'))
 
 # first: train only the top layers (which were randomly initialized)
 # i.e. freeze all convolutional InceptionV3 layers

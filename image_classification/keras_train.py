@@ -25,8 +25,30 @@ img_width = 56
 datagen = processing.ImageDataGenerator(
     rescale=1. / 255,
     shear_range=0.2,
-    zoom_range=0.2,
-    horizontal_flip=True)
+    featurewise_center=False,  # set input mean to 0 over the dataset
+    samplewise_center=False,  # set each sample mean to 0
+    featurewise_std_normalization=False,  # divide inputs by std of the dataset
+    samplewise_std_normalization=False,  # divide each input by its std
+    zca_whitening=False,  # apply ZCA whitening
+    zca_epsilon=1e-06,  # epsilon for ZCA whitening
+    rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
+    # randomly shift images horizontally (fraction of total width)
+    width_shift_range=0.1,
+    # randomly shift images vertically (fraction of total height)
+    height_shift_range=0.1,
+    zoom_range=0.,  # set range for random zoom
+    channel_shift_range=0.,  # set range for random channel shifts
+    # set mode for filling points outside the input boundaries
+    fill_mode='nearest',
+    cval=0.,  # value used for fill_mode = "constant"
+    horizontal_flip=True,  # randomly flip images
+    vertical_flip=False,  # randomly flip images
+    # set function that will be applied on each input
+    preprocessing_function=None,
+    # image data format, either "channels_first" or "channels_last"
+    data_format=None,
+    # fraction of images reserved for validation (strictly between 0 and 1)
+    validation_split=0.0)
 train_generator = datagen.flow_from_directory(
     file_path,
     target_size=(img_height, img_width),
@@ -61,7 +83,7 @@ model.add(Activation('softmax'))
 opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 
 # Let's train the model using RMSprop
-model.compile(loss='categorical_crossentropy',
+model.compile(loss='mean_squared_error',
               optimizer=opt,
               metrics=['accuracy'])
 model.fit_generator(train_generator)
