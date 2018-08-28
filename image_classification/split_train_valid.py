@@ -4,9 +4,11 @@ import numpy as np
 from os import listdir
 from os.path import isfile, isdir, join
 
-file_paths = 'E:\\Data\\train_val2018\\TrainVal\\'
-dest11 = "E:\\Data\\train_val2018\\Valid\\"
+# file_paths = 'E:\\Data\\train_val2018\\TrainVal\\'
+# dest11 = "E:\\Data\\train_val2018\\Valid\\"
 
+file_paths = 'E:\\Data\\train_voice\\train\\'
+dest11 = 'E:\\Data\\train_voice\\debug\\'
 all_folders = [f for f in listdir(file_paths) if isdir(join(file_paths, f))]
 for folder in all_folders:
     full_path_folder = join(file_paths, folder)
@@ -17,5 +19,5 @@ for folder in all_folders:
     for file in all_files:
         full_path_file = join(full_path_folder, file)
         full_path_file_valid = join(full_path_folder_valid, file)
-        if np.random.rand(1) < 0.2:
-            shutil.move(full_path_file, full_path_file_valid)
+        if np.random.rand(1) < 0.02:
+            shutil.copy(full_path_file, full_path_file_valid)
