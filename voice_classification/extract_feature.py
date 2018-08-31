@@ -25,7 +25,7 @@ def getfeature(fname):
     spectral_center = librosa.feature.spectral_centroid(y=y, sr=sr, hop_length=hop_length)
     chroma = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=hop_length)
     spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=hop_length)
-
+    mel_spectrogram = librosa.feature.melspectrogram(y=y, sr = sr, hop_length=hop_length)
     filelength = timeseries_length if mfcc.shape[1] >= timeseries_length else mfcc.shape[1]
 
     data[-filelength:, 0:13] = mfcc.T[0:timeseries_length, :]
@@ -62,6 +62,7 @@ def processing(folder_train):
     return X, Ygender, YRegion
 
 def multi_processing(folder_train):
+    start_time = time.time()
     _data, _gender, _region = [], [], []
     p = Pool(4)
     full_path_file_folder_list = []
@@ -80,12 +81,13 @@ def multi_processing(folder_train):
     X = np.array(_data)
     Ygender = to_categorical(np.array(_gender))
     YRegion = to_categorical(np.array(_region))
+    print('time to process ' + str(time.time() - start_time))
     return X, Ygender, YRegion
 
 if __name__ == '__main__':
     start_time = time.time()
 
     folder_train = 'E:\\Data\\train_voice\\debug'
-    multi_processing(folder_train)
+    processing(folder_train)
     elapsed_time = time.time() - start_time
     print(elapsed_time)

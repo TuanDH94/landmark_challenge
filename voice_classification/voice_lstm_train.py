@@ -4,9 +4,9 @@ from keras.models import Sequential
 from keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from keras.optimizers import RMSprop
-folder_train = 'E:\\Data\\train_voice\\debug\\'
-nb_epochs =100
-batch_size = 1
+folder_train = 'E:\\Data\\train_voice\\train\\'
+nb_epochs = 100
+batch_size = 32
 def get_model(time_series, nfeatures, nclass):
     model = Sequential()
     model.add(LSTM(units=128, dropout=0.05, recurrent_dropout=0.35, return_sequences=True,
